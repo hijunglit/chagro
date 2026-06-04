@@ -51,16 +51,22 @@ class _BottomNavigationBarExampleState
           title: const Text('이 곳은 로고 위치'),
           backgroundColor: const Color(0xFFF2ECDD),
         ),
-        body: GridView.count(
-          crossAxisCount: 3,
-          children: List.generate(9 + 1, (index) {
-            return Center(
-              child: Text(
-                'Item $index',
-                style: TextTheme.of(context).headlineSmall,
-              ),
-            );
-          }),
+        body: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 22,
+            childAspectRatio: 0.7,
+          ),
+          itemCount: 9 + 1,
+          itemBuilder: (context, index) {
+            if (index == 9) {
+              return const Center(
+                child: Icon(Icons.add, color: Colors.black, size: 44),
+              );
+            }
+            return Book(bgColor: Colors.black, img: 'img $index');
+          },
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
