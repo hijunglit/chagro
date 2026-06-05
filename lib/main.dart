@@ -44,29 +44,40 @@ class _BottomNavigationBarExampleState
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '',
+      title: '채그로',
       home: Scaffold(
         backgroundColor: const Color(0xFFF2ECDD),
-        appBar: AppBar(
-          title: const Text('이 곳은 로고 위치'),
-          backgroundColor: const Color(0xFFF2ECDD),
-        ),
-        body: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 22,
-            childAspectRatio: 0.7,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: Column(
+            children: [
+              const Row(children: [SizedBox(height: 80)]),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [Icon(Icons.logo_dev, size: 100)],
+              ),
+              Expanded(
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 30,
+                    mainAxisSpacing: 22,
+                    childAspectRatio: 0.7,
+                  ),
+                  itemCount: 9 + 1,
+                  itemBuilder: (context, index) {
+                    if (index == 9) {
+                      return const Center(
+                        child: Icon(Icons.add, color: Colors.black, size: 44),
+                      );
+                    }
+                    return Book(bgColor: Colors.black, img: 'img $index');
+                  },
+                ),
+              ),
+              const Row(children: [Text('현재 책 개수: 9')]),
+            ],
           ),
-          itemCount: 9 + 1,
-          itemBuilder: (context, index) {
-            if (index == 9) {
-              return const Center(
-                child: Icon(Icons.add, color: Colors.black, size: 44),
-              );
-            }
-            return Book(bgColor: Colors.black, img: 'img $index');
-          },
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[

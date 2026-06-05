@@ -8,19 +8,18 @@ class Book extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+    return GestureDetector(
+      onTap: () {
+        print("Take me there");
+      },
       child: Container(
         decoration: BoxDecoration(
           color: bgColor,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(4),
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 15),
-          child: Text(
-            img,
-            style: const TextStyle(fontSize: 16, color: Colors.white),
-          ),
+        child: Text(
+          img,
+          style: const TextStyle(fontSize: 16, color: Colors.white),
         ),
       ),
     );
