@@ -4,7 +4,7 @@ class BookModel {
   final String author;
   final String coverUrl;
   final String summary;
-  final List<String> tags;
+  final List<dynamic> tags;
   final int totalPages;
   final double rating;
   final String memo;
@@ -28,7 +28,7 @@ class BookModel {
       author: json['author'] as String,
       coverUrl: json['coverUrl'] as String,
       summary: json['summary'] as String,
-      tags: json['tags'] as List<String>,
+      tags: json['tags'] as List<dynamic>,
       totalPages: json['totalPages'] as int,
       rating: json['rating'] as double,
       memo: json['memo'] as String,

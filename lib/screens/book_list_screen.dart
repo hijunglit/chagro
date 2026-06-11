@@ -27,8 +27,17 @@ class _BookListScreenState extends State<BookListScreen> {
       body: FutureBuilder<List<BookModel>>(
         future: _booksFuture,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          // 1. Loading state
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          // 2. Error handling state
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+          if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             final books = snapshot.data!;
+
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Column(
@@ -49,8 +58,8 @@ class _BookListScreenState extends State<BookListScreen> {
                           ),
                       itemCount: books.length + 1,
                       itemBuilder: (context, index) {
-                        final book = books[index];
-                        if (index == 9) {
+                        final book = books[index - 1];
+                        if (index == books.length) {
                           return const Center(
                             child: Icon(
                               Icons.add,
@@ -58,18 +67,19 @@ class _BookListScreenState extends State<BookListScreen> {
                               size: 44,
                             ),
                           );
+                        } else {
+                          return Book(
+                            id: book.id,
+                            title: book.title,
+                            author: book.author,
+                            coverUrl: book.coverUrl,
+                            summary: book.summary,
+                            tags: book.tags.join(),
+                            totalPages: book.totalPages.toString(),
+                            rating: book.rating.toString(),
+                            memo: book.memo,
+                          );
                         }
-                        return Book(
-                          id: book.id,
-                          title: book.title,
-                          author: book.author,
-                          coverUrl: book.coverUrl,
-                          summary: book.summary,
-                          tags: book.tags.join(),
-                          totalPages: book.totalPages.toString(),
-                          rating: book.rating.toString(),
-                          memo: book.memo,
-                        );
                       },
                     ),
                   ),

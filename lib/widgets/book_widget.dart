@@ -27,18 +27,21 @@ class Book extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        print("Clicked!");
-      },
+      onTap: () {},
       child: Column(
         children: [
           Container(
             width: 250,
+            height: 110,
 
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
             child: Image.network(coverUrl),
           ),
-          Text(title),
+          Text(
+            title,
+            style: const TextStyle(fontSize: 12),
+            overflow: TextOverflow.ellipsis,
+          ),
         ],
       ),
     );
