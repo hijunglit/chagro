@@ -58,7 +58,6 @@ class _BookListScreenState extends State<BookListScreen> {
                           ),
                       itemCount: books.length + 1,
                       itemBuilder: (context, index) {
-                        final book = books[index - 1];
                         if (index == books.length) {
                           return const Center(
                             child: Icon(
@@ -68,6 +67,7 @@ class _BookListScreenState extends State<BookListScreen> {
                             ),
                           );
                         } else {
+                          final book = books[index];
                           return Book(
                             id: book.id,
                             title: book.title,
