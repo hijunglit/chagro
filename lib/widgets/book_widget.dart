@@ -1,3 +1,4 @@
+import 'package:chagro/screens/detail_screen.dart';
 import 'package:flutter/material.dart';
 
 class Book extends StatelessWidget {
@@ -27,7 +28,24 @@ class Book extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailScreen(
+              id: id,
+              title: title,
+              author: author,
+              coverUrl: coverUrl,
+              summary: summary,
+              tags: tags,
+              totalPages: totalPages,
+              rating: rating,
+              memo: memo,
+            ),
+          ),
+        );
+      },
       child: Column(
         children: [
           Container(
