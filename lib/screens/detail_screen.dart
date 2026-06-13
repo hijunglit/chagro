@@ -70,7 +70,12 @@ class DetailScreen extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  Row(children: [const Text("summary:"), Text(summary)]),
+                  Row(
+                    children: [
+                      const Text("summary:"),
+                      Text(summary, overflow: TextOverflow.ellipsis),
+                    ],
+                  ),
                 ],
               ),
             ],
