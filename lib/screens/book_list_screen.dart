@@ -13,7 +13,6 @@ class BookListScreen extends StatefulWidget {
 class _BookListScreenState extends State<BookListScreen> {
   final ApiService _apiService = ApiService();
   late Future<List<BookModel>> _booksFuture;
-  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -21,107 +20,78 @@ class _BookListScreenState extends State<BookListScreen> {
     _booksFuture = _apiService.getBooks();
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF2ECDD),
-      body: FutureBuilder<List<BookModel>>(
-        future: _booksFuture,
-        builder: (context, snapshot) {
-          // 1. Loading state
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          // 2. Error handling state
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-          if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-            final books = snapshot.data!;
-            final totalBooks = books.length;
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Column(
-                children: [
-                  const Row(children: [SizedBox(height: 80)]),
-                  const Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [Icon(Icons.settings, size: 30)],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [Icon(Icons.logo_dev, size: 100)],
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 30,
-                            mainAxisSpacing: 22,
-                            childAspectRatio: 0.7,
-                          ),
-                      itemCount: books.length + 1,
-                      itemBuilder: (context, index) {
-                        if (index == books.length) {
-                          return const Center(
-                            child: Icon(
-                              Icons.add,
-                              color: Colors.black,
-                              size: 44,
-                            ),
-                          );
-                        } else {
-                          final book = books[index];
-                          return Book(
-                            id: book.id,
-                            title: book.title,
-                            author: book.author,
-                            coverUrl: book.coverUrl,
-                            summary: book.summary,
-                            tags: book.tags.join(),
-                            totalPages: book.totalPages.toString(),
-                            rating: book.rating.toString(),
-                            memo: book.memo,
-                          );
-                        }
-                      },
+    return FutureBuilder<List<BookModel>>(
+      future: _booksFuture,
+      builder: (context, snapshot) {
+        // 1. Loading state
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        // 2. Error handling state
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+          final books = snapshot.data!;
+          final totalBooks = books.length;
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: Column(
+              children: [
+                const Row(children: [SizedBox(height: 80)]),
+                const Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [Icon(Icons.settings, size: 30)],
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [Icon(Icons.logo_dev, size: 100)],
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 30,
+                          mainAxisSpacing: 22,
+                          childAspectRatio: 0.7,
+                        ),
+                    itemCount: books.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index == books.length) {
+                        return const Center(
+                          child: Icon(Icons.add, color: Colors.black, size: 44),
+                        );
+                      } else {
+                        final book = books[index];
+                        return Book(
+                          id: book.id,
+                          title: book.title,
+                          author: book.author,
+                          coverUrl: book.coverUrl,
+                          summary: book.summary,
+                          tags: book.tags.join(),
+                          totalPages: book.totalPages.toString(),
+                          rating: book.rating.toString(),
+                          memo: book.memo,
+                        );
+                      }
+                    },
                   ),
-                  Row(children: [Text('등록된 책: $totalBooks 권')]),
-                ],
-              ),
-            );
-          }
-          return const Text('Loading...');
-        },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: '홈'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart_outlined),
-            label: '차트',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline_sharp),
-            label: '내 정보',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
-      ),
+                ),
+                Row(children: [Text('등록된 책: $totalBooks 권')]),
+              ],
+            ),
+          );
+        }
+        return const Text('Loading...');
+      },
     );
   }
 }
