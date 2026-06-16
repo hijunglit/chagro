@@ -13,11 +13,18 @@ class BookListScreen extends StatefulWidget {
 class _BookListScreenState extends State<BookListScreen> {
   final ApiService _apiService = ApiService();
   late Future<List<BookModel>> _booksFuture;
+  int _selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
     _booksFuture = _apiService.getBooks();
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   @override
@@ -37,15 +44,23 @@ class _BookListScreenState extends State<BookListScreen> {
           }
           if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             final books = snapshot.data!;
-
+            final totalBooks = books.length;
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Column(
                 children: [
                   const Row(children: [SizedBox(height: 80)]),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [Icon(Icons.logo_dev, size: 100)],
+                  const Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [Icon(Icons.settings, size: 30)],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [Icon(Icons.logo_dev, size: 100)],
+                      ),
+                    ],
                   ),
                   Expanded(
                     child: GridView.builder(
@@ -83,13 +98,29 @@ class _BookListScreenState extends State<BookListScreen> {
                       },
                     ),
                   ),
-                  const Row(children: [Text('현재 책 개수: {}')]),
+                  Row(children: [Text('등록된 책: $totalBooks 권')]),
                 ],
               ),
             );
           }
           return const Text('Loading...');
         },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: '홈'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart_outlined),
+            label: '차트',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline_sharp),
+            label: '내 정보',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        onTap: _onItemTapped,
       ),
     );
   }
