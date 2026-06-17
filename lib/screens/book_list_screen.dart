@@ -40,7 +40,7 @@ class _BookListScreenState extends State<BookListScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: Column(
               children: [
-                const Row(children: [SizedBox(height: 80)]),
+                const Row(children: [SizedBox(height: 60)]),
                 const Column(
                   children: [
                     Row(
@@ -49,7 +49,60 @@ class _BookListScreenState extends State<BookListScreen> {
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [Icon(Icons.logo_dev, size: 100)],
+                      children: [Icon(Icons.logo_dev, size: 70)],
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            '전체',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              final RenderBox renderBox =
+                                  context.findRenderObject() as RenderBox;
+                              final offset = renderBox.localToGlobal(
+                                Offset.zero,
+                              );
+
+                              showMenu(
+                                context: context,
+                                position: RelativeRect.fromLTRB(
+                                  offset.dx + renderBox.size.width,
+                                  offset.dy,
+                                  offset.dx + renderBox.size.width,
+                                  offset.dy,
+                                ),
+                                items: [
+                                  const PopupMenuItem(
+                                    value: 'queue',
+                                    child: Text('예정'),
+                                  ),
+                                  const PopupMenuItem(
+                                    value: 'reading',
+                                    child: Text('읽는 중'),
+                                  ),
+                                  const PopupMenuItem(
+                                    value: 'complete',
+                                    child: Text('완독'),
+                                  ),
+                                ],
+                              );
+                            },
+                            icon: const Icon(Icons.more_horiz_rounded),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -85,7 +138,23 @@ class _BookListScreenState extends State<BookListScreen> {
                     },
                   ),
                 ),
-                Row(children: [Text('등록된 책: $totalBooks 권')]),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 20,
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        '등록된 책: $totalBooks 권',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           );
@@ -95,3 +164,8 @@ class _BookListScreenState extends State<BookListScreen> {
     );
   }
 }
+
+// 책 상태 필터링
+// 더 보기 메뉴에서 보고싶은 상태를 터치한다. (팝업 메뉴)
+// 선택한 상태로 상태명이 바뀐다.
+// 선택한 상태에 부합하는 책들이 디스플레이 된다.
