@@ -1,3 +1,4 @@
+import 'package:chagro/models/book_model.dart';
 import 'package:flutter/material.dart';
 
 class DetailScreen extends StatelessWidget {
@@ -10,6 +11,7 @@ class DetailScreen extends StatelessWidget {
   final String totalPages;
   final String rating;
   final String memo;
+  final BookStatus status;
 
   const DetailScreen({
     super.key,
@@ -22,6 +24,7 @@ class DetailScreen extends StatelessWidget {
     required this.totalPages,
     required this.rating,
     required this.memo,
+    required this.status,
   });
 
   @override
@@ -74,6 +77,21 @@ class DetailScreen extends StatelessWidget {
                     children: [
                       const Text("summary:"),
                       Text(summary, overflow: TextOverflow.ellipsis),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      const Text("status:"),
+                      Text(status, overflow: TextOverflow.ellipsis),
                     ],
                   ),
                 ],

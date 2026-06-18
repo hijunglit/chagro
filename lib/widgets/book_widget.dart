@@ -1,3 +1,4 @@
+import 'package:chagro/models/book_model.dart';
 import 'package:chagro/screens/detail_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +12,7 @@ class Book extends StatelessWidget {
   final String totalPages;
   final String rating;
   final String memo;
+  final BookStatus status;
 
   const Book({
     super.key,
@@ -23,6 +25,7 @@ class Book extends StatelessWidget {
     required this.totalPages,
     required this.rating,
     required this.memo,
+    required this.status,
   });
 
   @override
@@ -42,6 +45,7 @@ class Book extends StatelessWidget {
               totalPages: totalPages,
               rating: rating,
               memo: memo,
+              status: status,
             ),
           ),
         );
