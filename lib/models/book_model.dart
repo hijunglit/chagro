@@ -1,3 +1,5 @@
+enum BookStatus { queue, process, complete }
+
 class BookModel {
   final String id;
   final String title;
@@ -8,6 +10,7 @@ class BookModel {
   final int totalPages;
   final double rating;
   final String memo;
+  final BookStatus status;
 
   BookModel({
     required this.id,
@@ -19,6 +22,7 @@ class BookModel {
     required this.totalPages,
     required this.rating,
     required this.memo,
+    required this.status,
   });
 
   factory BookModel.fromJson(Map<String, dynamic> json) {
@@ -32,6 +36,25 @@ class BookModel {
       totalPages: json['totalPages'] as int,
       rating: json['rating'] as double,
       memo: json['memo'] as String,
+      status: BookStatus.values.firstWhere(
+        (e) => e.name == json['status'],
+        orElse: () => BookStatus.queue,
+      ),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'author': author,
+      'coverUrl': coverUrl,
+      'summary': summary,
+      'tags': tags,
+      'totalPages': totalPages,
+      'rating': rating,
+      'memo': memo,
+      'status': status,
+    };
   }
 }
