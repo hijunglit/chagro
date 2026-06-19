@@ -91,7 +91,7 @@ class DetailScreen extends StatelessWidget {
                   Row(
                     children: [
                       const Text("status:"),
-                      Text(status, overflow: TextOverflow.ellipsis),
+                      Text(status.name, overflow: TextOverflow.ellipsis),
                     ],
                   ),
                 ],

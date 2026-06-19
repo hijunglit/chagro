@@ -54,7 +54,7 @@ class BookModel {
       'totalPages': totalPages,
       'rating': rating,
       'memo': memo,
-      'status': status,
+      'status': status.name,
     };
   }
 }

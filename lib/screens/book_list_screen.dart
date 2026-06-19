@@ -85,6 +85,10 @@ class _BookListScreenState extends State<BookListScreen> {
                                 ),
                                 items: [
                                   const PopupMenuItem(
+                                    value: 'all',
+                                    child: Text('전체'),
+                                  ),
+                                  const PopupMenuItem(
                                     value: 'queue',
                                     child: Text('예정'),
                                   ),
@@ -133,6 +137,7 @@ class _BookListScreenState extends State<BookListScreen> {
                           totalPages: book.totalPages.toString(),
                           rating: book.rating.toString(),
                           memo: book.memo,
+                          status: book.status,
                         );
                       }
                     },
@@ -171,6 +176,6 @@ class _BookListScreenState extends State<BookListScreen> {
 // 선택한 상태에 부합하는 책들이 디스플레이 된다.
 
 // 상태 필터링 메소드
-// 데이터에 Enum 값 추가(읽을 예정, 읽는중, 완독)
+// 데이터에 Enum 값 추가(읽을 예정, 읽는중, 완독) O
 // case 문을 이용해 필터링된 책의 값을 할당하기
 // 필터링 된 책 display 하기
