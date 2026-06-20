@@ -10,6 +10,41 @@ class BookListScreen extends StatefulWidget {
   State<BookListScreen> createState() => _BookListScreenState();
 }
 
+class BooksProvider extends ChangeNotifier {
+  final ApiService apiService;
+
+  BooksProvider(this.apiService);
+  List<BookModel> _books = [];
+  String _selectedStatus = 'all';
+  bool _isLoading = false;
+
+  List<BookModel> get books => _books;
+  bool get isLoading => _isLoading;
+
+  List<BookModel> get filteredBooks {
+    if (_selectedStatus == 'all') {
+      return _books;
+    } else {
+      _books.where((book) => book.status == _selectedStatus).toList();
+    }
+  }
+
+  Future<void> fetchBooks() async {
+    _isLoading = true;
+    notifyListeners();
+
+    _books = await apiService.getBooks();
+
+    _isLoading = false;
+    notifyListeners();
+
+    void changeStatusFilter(String status) {
+      _selectedStatus = status;
+      notifyListeners();
+    }
+  }
+}
+
 class _BookListScreenState extends State<BookListScreen> {
   final ApiService _apiService = ApiService();
   late Future<List<BookModel>> _booksFuture;
@@ -34,7 +69,7 @@ class _BookListScreenState extends State<BookListScreen> {
           return Center(child: Text('Error: ${snapshot.error}'));
         }
         if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-          final books = snapshot.data!;
+          final List<BookModel> books = snapshot.data!;
           final totalBooks = books.length;
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30),
