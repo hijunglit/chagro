@@ -2,6 +2,7 @@ import 'package:chagro/models/book_model.dart';
 import 'package:chagro/services/api_service.dart';
 import 'package:chagro/widgets/book_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BookListScreen extends StatefulWidget {
   const BookListScreen({super.key});
@@ -14,6 +15,7 @@ class BooksProvider extends ChangeNotifier {
   final ApiService apiService;
 
   BooksProvider(this.apiService);
+
   List<BookModel> _books = [];
   String _selectedStatus = 'all';
   bool _isLoading = false;
@@ -22,10 +24,11 @@ class BooksProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   List<BookModel> get filteredBooks {
+    // 바디에 null 이 리턴될텐데, 리턴 타입이 LIST<BookModel이다. 이것은 잠재적으로 null을 허용하지 않는 타입니다.>
     if (_selectedStatus == 'all') {
       return _books;
     } else {
-      _books.where((book) => book.status == _selectedStatus).toList();
+      return _books.where((book) => book.status == _selectedStatus).toList();
     }
   }
 
@@ -37,170 +40,129 @@ class BooksProvider extends ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+  }
 
-    void changeStatusFilter(String status) {
-      _selectedStatus = status;
-      notifyListeners();
-    }
+  void changeStatusFilter(String status) {
+    _selectedStatus = status;
+    notifyListeners();
   }
 }
 
 class _BookListScreenState extends State<BookListScreen> {
-  final ApiService _apiService = ApiService();
-  late Future<List<BookModel>> _booksFuture;
+  final ApiService apiService = ApiService();
+  // late Future<List<BookModel>> _booksFuture;
 
   @override
   void initState() {
     super.initState();
-    _booksFuture = _apiService.getBooks();
+
+    Future.microtask(() {
+      context.read<BooksProvider>().fetchBooks();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<BookModel>>(
-      future: _booksFuture,
-      builder: (context, snapshot) {
-        // 1. Loading state
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        // 2. Error handling state
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        }
-        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-          final List<BookModel> books = snapshot.data!;
-          final totalBooks = books.length;
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Column(
-              children: [
-                const Row(children: [SizedBox(height: 60)]),
-                const Column(
+    final provider = context.watch<BooksProvider>();
+    if (provider.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    final books = provider.filteredBooks;
+    // for (var book in books) {
+    //   print(book.coverUrl);
+    // }
+    final totalBooks = books.length;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30),
+      child: Column(
+        children: [
+          const Row(children: [SizedBox(height: 60)]),
+          const Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [Icon(Icons.settings, size: 30)],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [Icon(Icons.logo_dev, size: 70)],
+              ),
+            ],
+          ),
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [Icon(Icons.settings, size: 30)],
+                    const Text(
+                      '전체',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [Icon(Icons.logo_dev, size: 70)],
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            '전체',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              final RenderBox renderBox =
-                                  context.findRenderObject() as RenderBox;
-                              final offset = renderBox.localToGlobal(
-                                Offset.zero,
-                              );
 
-                              showMenu(
-                                context: context,
-                                position: RelativeRect.fromLTRB(
-                                  offset.dx + renderBox.size.width,
-                                  offset.dy,
-                                  offset.dx + renderBox.size.width,
-                                  offset.dy,
-                                ),
-                                items: [
-                                  const PopupMenuItem(
-                                    value: 'all',
-                                    child: Text('전체'),
-                                  ),
-                                  const PopupMenuItem(
-                                    value: 'queue',
-                                    child: Text('예정'),
-                                  ),
-                                  const PopupMenuItem(
-                                    value: 'reading',
-                                    child: Text('읽는 중'),
-                                  ),
-                                  const PopupMenuItem(
-                                    value: 'complete',
-                                    child: Text('완독'),
-                                  ),
-                                ],
-                              );
-                            },
-                            icon: const Icon(Icons.more_horiz_rounded),
-                          ),
-                        ],
-                      ),
+                    ElevatedButton(
+                      onPressed: () {
+                        provider.changeStatusFilter("done");
+                      },
+                      child: const Text("완료"),
                     ),
                   ],
                 ),
-                Expanded(
-                  child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 30,
-                          mainAxisSpacing: 22,
-                          childAspectRatio: 0.7,
-                        ),
-                    itemCount: books.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index == books.length) {
-                        return const Center(
-                          child: Icon(Icons.add, color: Colors.black, size: 44),
-                        );
-                      } else {
-                        final book = books[index];
-                        return Book(
-                          id: book.id,
-                          title: book.title,
-                          author: book.author,
-                          coverUrl: book.coverUrl,
-                          summary: book.summary,
-                          tags: book.tags.join(),
-                          totalPages: book.totalPages.toString(),
-                          rating: book.rating.toString(),
-                          memo: book.memo,
-                          status: book.status,
-                        );
-                      }
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 20,
-                  ),
-                  child: Row(
-                    children: [
-                      Text(
-                        '등록된 책: $totalBooks 권',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
+              ),
+            ],
+          ),
+          Expanded(
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 30,
+                mainAxisSpacing: 22,
+                childAspectRatio: 0.7,
+              ),
+              itemCount: books.length + 1,
+              itemBuilder: (context, index) {
+                if (index == books.length) {
+                  return const Center(
+                    child: Icon(Icons.add, color: Colors.black, size: 44),
+                  );
+                } else {
+                  final book = books[index];
+                  return Book(
+                    id: book.id,
+                    title: book.title,
+                    author: book.author,
+                    coverUrl: book.coverUrl,
+                    summary: book.summary,
+                    tags: book.tags.join(),
+                    totalPages: book.totalPages.toString(),
+                    rating: book.rating.toString(),
+                    memo: book.memo,
+                    status: book.status,
+                  );
+                }
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            child: Row(
+              children: [
+                Text(
+                  '등록된 책: $totalBooks 권',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
                   ),
                 ),
               ],
             ),
-          );
-        }
-        return const Text('Loading...');
-      },
+          ),
+        ],
+      ),
     );
   }
 }
