@@ -114,14 +114,6 @@ class _BookListScreenState extends State<BookListScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      '전체',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-
                     DropdownButton<BookStatus>(
                       value: provider._selectedStatus,
                       items: BookStatus.values.map((status) {
@@ -148,9 +140,12 @@ class _BookListScreenState extends State<BookListScreen> {
                 mainAxisSpacing: 22,
                 childAspectRatio: 0.7,
               ),
-              itemCount: books.length + 1,
+              itemCount: provider._selectedStatus == BookStatus.all
+                  ? books.length + 1
+                  : books.length,
               itemBuilder: (context, index) {
-                if (index == books.length) {
+                if (provider._selectedStatus == BookStatus.all &&
+                    index == books.length) {
                   return const Center(
                     child: Icon(Icons.add, color: Colors.black, size: 44),
                   );

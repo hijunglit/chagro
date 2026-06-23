@@ -35,69 +35,62 @@ class DetailScreen extends StatelessWidget {
       body: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [SizedBox(width: 250, child: Image.network(coverUrl))],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
+              Row(
                 children: [
-                  Row(children: [const Text("Title:"), Text(title)]),
+                  SizedBox(width: 120, child: Image.network(coverUrl)),
                 ],
               ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                children: [
-                  Row(children: [const Text("Author:"), Text(author)]),
-                ],
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                children: [
-                  Row(children: [const Text("Total pages:"), Text(totalPages)]),
-                ],
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
               Column(
                 children: [
                   Row(
                     children: [
-                      const Text("summary:"),
-                      Text(summary, overflow: TextOverflow.ellipsis),
+                      Column(
+                        children: [
+                          Row(children: [Text(title)]),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Column(
+                        children: [
+                          Row(children: [Text(author)]),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Column(
+                        children: [
+                          Row(children: [const Text("페이지:"), Text(totalPages)]),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Column(
+                        children: [
+                          Row(
+                            children: [
+                              const Text("내용:"),
+                              Text(summary, overflow: TextOverflow.ellipsis),
+                            ],
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ],
               ),
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                children: [
-                  Row(
-                    children: [
-                      const Text("status:"),
-                      Text(status.name, overflow: TextOverflow.ellipsis),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
+          const Row(children: [Text('책 상태 영역')]),
+          const Row(children: [Text('책 메모 영역')]),
         ],
       ),
     );
