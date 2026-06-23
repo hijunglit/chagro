@@ -17,7 +17,10 @@ class BooksProvider extends ChangeNotifier {
   BooksProvider(this.apiService);
 
   List<BookModel> _books = [];
-  String _selectedStatus = 'all';
+  BookStatus _selectedStatus = BookStatus.all;
+
+  BookStatus get selectedStatus => _selectedStatus;
+
   bool _isLoading = false;
 
   List<BookModel> get books => _books;
@@ -25,7 +28,7 @@ class BooksProvider extends ChangeNotifier {
 
   List<BookModel> get filteredBooks {
     // 바디에 null 이 리턴될텐데, 리턴 타입이 LIST<BookModel이다. 이것은 잠재적으로 null을 허용하지 않는 타입니다.>
-    if (_selectedStatus == 'all') {
+    if (_selectedStatus == BookStatus.all) {
       return _books;
     } else {
       return _books.where((book) => book.status == _selectedStatus).toList();
@@ -42,9 +45,24 @@ class BooksProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void changeStatusFilter(String status) {
+  void changeStatusFilter(BookStatus status) {
     _selectedStatus = status;
     notifyListeners();
+  }
+}
+
+extension BookStatusLabel on BookStatus {
+  String get label {
+    switch (this) {
+      case BookStatus.all:
+        return '전체';
+      case BookStatus.queue:
+        return '대기';
+      case BookStatus.process:
+        return '진행 중';
+      case BookStatus.complete:
+        return '완료';
+    }
   }
 }
 
@@ -104,11 +122,18 @@ class _BookListScreenState extends State<BookListScreen> {
                       ),
                     ),
 
-                    ElevatedButton(
-                      onPressed: () {
-                        provider.changeStatusFilter("done");
+                    DropdownButton<BookStatus>(
+                      value: provider._selectedStatus,
+                      items: BookStatus.values.map((status) {
+                        return DropdownMenuItem<BookStatus>(
+                          value: status,
+                          child: Text(status.label),
+                        );
+                      }).toList(),
+                      onChanged: (BookStatus? value) {
+                        if (value == null) return;
+                        context.read<BooksProvider>().changeStatusFilter(value);
                       },
-                      child: const Text("완료"),
                     ),
                   ],
                 ),

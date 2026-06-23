@@ -63,7 +63,7 @@ class ApiService {
     "totalPages": 354,
     "rating": 4.5,
     "memo": "메모가 길어졌을 때 UI 줄바꿈 테스트하기 좋음.",
-    "status": "done"
+    "status": "complete"
   },
   {
     "id": "book_006",
@@ -75,7 +75,7 @@ class ApiService {
     "totalPages": 478,
     "rating": 4.9,
     "memo": "개발자 독서 앱이라면 이런 기술서 데이터도 필요할 듯.",
-    "status": "done"
+    "status": "complete"
   },
   {
     "id": "book_007",
@@ -87,7 +87,7 @@ class ApiService {
     "totalPages": 391,
     "rating": 4.2,
     "memo": "긴 제목 UI 테스트를 위해 제목을 더 길게 만들어도 좋을 것 같음.",
-    "status": "done"
+    "status": "complete"
   },
   {
     "id": "book_008",

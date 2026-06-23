@@ -1,4 +1,4 @@
-enum BookStatus { queue, process, complete }
+enum BookStatus { all, queue, process, complete }
 
 class BookModel {
   final String id;
@@ -37,7 +37,7 @@ class BookModel {
       rating: json['rating'] as double,
       memo: json['memo'] as String,
       status: BookStatus.values.firstWhere(
-        (e) => e.name == json['status'],
+        (status) => status.name == json['status'],
         orElse: () => BookStatus.queue,
       ),
     );
