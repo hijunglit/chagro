@@ -32,66 +32,72 @@ class DetailScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF2ECDD),
       appBar: AppBar(backgroundColor: const Color(0xFFF2ECDD)),
-      body: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  SizedBox(width: 120, child: Image.network(coverUrl)),
-                ],
-              ),
-              Column(
-                children: [
-                  Row(
-                    children: [
-                      Column(
-                        children: [
-                          Row(children: [Text(title)]),
-                        ],
-                      ),
-                    ],
+      body: Padding(
+        padding: const EdgeInsetsGeometry.symmetric(
+          vertical: 8,
+          horizontal: 20,
+        ),
+        child: Column(
+          spacing: 30,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  clipBehavior: Clip.hardEdge,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  Row(
-                    children: [
-                      Column(
-                        children: [
-                          Row(children: [Text(author)]),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Column(
-                        children: [
-                          Row(children: [const Text("페이지:"), Text(totalPages)]),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Column(
-                        children: [
-                          Row(
-                            children: [
-                              const Text("내용:"),
-                              Text(summary, overflow: TextOverflow.ellipsis),
-                            ],
+                  width: 120,
+                  child: Image.network(coverUrl),
+                ),
+                const SizedBox(width: 14),
+                Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 6,
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const Row(children: [Text('책 상태 영역')]),
-          const Row(children: [Text('책 메모 영역')]),
-        ],
+                        ),
+                        Text(author),
+                        Row(children: [Text(totalPages), const Text(' 페이지')]),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          child: Text(summary),
+                        ),
+                        // 책 내용 줄바꿈 처리 필요
+                        // overflow 처리 필요
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('책 상태'),
+                DropdownButton(
+                  value: '예정',
+                  items: ['예정', '읽는 중', '완독'].map((value) {
+                    return DropdownMenuItem(value: value, child: Text(value));
+                  }).toList(),
+                  onChanged: (value) {},
+                ),
+              ],
+            ), // 책 상태를 반영한 드롭다운 메뉴 필요. 드롭다운 메뉴를 변경하면 상태가 변경되어야 함.
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [Text('메모'), Text('전체 보기 >')],
+            ),
+          ],
+        ),
       ),
     );
   }
