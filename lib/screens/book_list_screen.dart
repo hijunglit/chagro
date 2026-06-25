@@ -112,7 +112,7 @@ class _BookListScreenState extends State<BookListScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     DropdownButton<BookStatus>(
                       value: provider._selectedStatus,

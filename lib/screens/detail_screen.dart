@@ -82,7 +82,10 @@ class DetailScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('책 상태'),
+                const Text(
+                  '책 상태',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
                 DropdownButton(
                   value: '예정',
                   items: ['예정', '읽는 중', '완독'].map((value) {
@@ -94,7 +97,13 @@ class DetailScreen extends StatelessWidget {
             ), // 책 상태를 반영한 드롭다운 메뉴 필요. 드롭다운 메뉴를 변경하면 상태가 변경되어야 함.
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [Text('메모'), Text('전체 보기 >')],
+              children: [
+                Text(
+                  '메모',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                Text('전체 보기 >'),
+              ],
             ),
           ],
         ),
